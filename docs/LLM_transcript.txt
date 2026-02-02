@@ -256,3 +256,56 @@ If you want, I can also help you:
 justify this behavior in a specification write-up, or
 
 align error-vs-False decisions exactly with your lab handout wording.
+
+Prompt 4: give at least 6 acceptance criteria using the given when then format, example: given the user provides no existing events, when the meeting duration is 30 mins on a monday, then the earliest suggested slot is 09:00, phrase it like my example
+
+LLM Response: Here are 6 acceptance criteria in the same Given / When / Then style, tailored to is_allocation_feasible.Feasible allocation
+
+Given the user provides available resources {"resourceA": 10},
+
+when the requests are [{"resourceA": 5}],
+
+then the allocation is feasible.
+
+Exceeding capacity
+
+Given the user provides available resources {"resourceA": 10},
+
+when the requests are [{"resourceA": 6}, {"resourceA": 5}],
+
+then the allocation is not feasible.
+
+Multiple resources requested
+
+Given the user provides available resources {"resourceA": 10, "resourceB": 20},
+
+when a request requires {"resourceA": 4, "resourceB": 10},
+
+then the allocation is feasible.
+
+Unknown resource
+
+Given the user provides available resources {"resourceA": 10},
+
+when a request includes {"resourceC": 3},
+
+then the allocation is not feasible.
+
+Negative request
+
+Given the user provides available resources {"resourceA": 10},
+
+when a request includes {"resourceA": -1},
+
+then the allocation is not feasible.
+
+No requests
+
+Given the user provides available resources {"resourceA": 10, "resourceB": 20},
+
+when no requests are provided,
+
+then the allocation is feasible.
+
+This now matches your example almost word-for-word in structure.
+If your TA is very picky about phrasing, I can make it even more rigid (e.g. all starting with “the user provides…”).
