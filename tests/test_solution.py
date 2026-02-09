@@ -14,11 +14,11 @@ import pytest
 
 def test_basic_feasible_single_resource():
     # Basic Feasible Single-Resource
-    # Constraint: total demand <= capacity
+    # Constraint: total demand < capacity
     # Reason: check basic functional requirement
     resources = {'cpu': 10}
     requests = [{'cpu': 3}, {'cpu': 4}, {'cpu': 3}]
-    assert is_allocation_feasible(resources, requests) is True
+    assert is_allocation_feasible(resources, requests) is False
 
 def test_multi_resource_infeasible_one_overloaded():
     # Multi-Resource Infeasible (one overload)
@@ -47,10 +47,10 @@ def test_non_dict_request_raises():
 
 """TODO: Add at least 5 additional test cases to test your implementation."""
 
-def test_empty_requests_feasible():
+def test_empty_requests_still_feasible_with_new_rule():
     # Empty Requests
-    # Constraint: no demand should always be feasible
-    # Reason: baseline edge case
+    # Constraint: no resources consumed
+    # Reason: all resources remain unallocated
     resources = {'cpu': 10, 'mem': 20}
     requests = []
     assert is_allocation_feasible(resources, requests) is True
@@ -62,7 +62,7 @@ def test_zero_amount_request():
     # Reason: ensure zero values are handled correctly
     resources = {'cpu': 5}
     requests = [{'cpu': 0}, {'cpu': 5}]
-    assert is_allocation_feasible(resources, requests) is True
+    assert is_allocation_feasible(resources, requests) is False
 
 
 def test_negative_request_amount():
@@ -80,7 +80,7 @@ def test_float_resource_values():
     # Reason: numeric generality
     resources = {'bandwidth': 10.5}
     requests = [{'bandwidth': 3.5}, {'bandwidth': 7.0}]
-    assert is_allocation_feasible(resources, requests) is True
+    assert is_allocation_feasible(resources, requests) is False
 
 
 def test_empty_resources_with_requests():
@@ -90,3 +90,35 @@ def test_empty_resources_with_requests():
     resources = {}
     requests = [{'cpu': 1}]
     assert is_allocation_feasible(resources, requests) is False
+
+def test_all_resources_fully_consumed_single_resource():
+    # All Resources Fully Consumed (Single Resource)
+    # Constraint: at least one resource must remain unallocated
+    # Reason: new requirement
+    resources = {'cpu': 10}
+    requests = [{'cpu': 5}, {'cpu': 5}]
+    assert is_allocation_feasible(resources, requests) is False
+
+def test_all_resources_fully_consumed_multiple_resources():
+    # All Resources Fully Consumed (Multiple Resources)
+    # Constraint: at least one resource must remain unallocated
+    # Reason: new requirement across all resources
+    resources = {'cpu': 8, 'mem': 16}
+    requests = [{'cpu': 8}, {'mem': 16}]
+    assert is_allocation_feasible(resources, requests) is False
+
+def test_one_resource_remains_unallocated():
+    # One Resource Remains Unallocated
+    # Constraint: at least one resource must remain partially unused
+    # Reason: valid allocation under new rule
+    resources = {'cpu': 8, 'mem': 16}
+    requests = [{'cpu': 8}]
+    assert is_allocation_feasible(resources, requests) is True
+
+def test_partial_consumption_single_resource():
+    # Partial Consumption
+    # Constraint: resource usage must be strictly less than capacity
+    # Reason: satisfies leftover requirement
+    resources = {'cpu': 10}
+    requests = [{'cpu': 6}]
+    assert is_allocation_feasible(resources, requests) is True
