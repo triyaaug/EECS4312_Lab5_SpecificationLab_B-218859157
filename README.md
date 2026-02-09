@@ -1,6 +1,6 @@
 ## TODO:
-## Student Name:
-## Student ID: 
+## Student Name: Triya Augustine
+## Student ID: 218859157
 
 # Is Resource Allocation Feasible Lab Repository
 
